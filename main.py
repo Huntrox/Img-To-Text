@@ -16,18 +16,24 @@ app.config['UPLOAD_FOLDER'] = './upload'
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 
 
-@app.route("/extract_text", methods=["POST"])
+@app.route("/extract-text", methods=["POST","GET"])
 def extract_text_b64():
     
-    image_b64 = request.json.get("image")
+    if request.method == "POST":
+        image_b64 = request.json.get("image")
+    else:
+        image_b64 = request.args.get("image")
+        
     image_bytes = base64.b64decode(image_b64)
     image = Image.open(io.BytesIO(image_bytes))
+    
+    
     
     text = extract_text(image)
     return text
 
 
-@app.route("/extract_text_img", methods=["POST"])
+@app.route("/extract-text-img", methods=["POST"])
 def extrac_text_img_file():
 
     if 'img' not in request.files:
